@@ -1,4 +1,4 @@
-package com.segunfamisa.icicle;
+package com.segunfamisa.icicle.sample;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.segunfamisa.icicle", appContext.getPackageName());
+        assertEquals("com.segunfamisa.icicle.sample", appContext.getPackageName());
     }
 }
