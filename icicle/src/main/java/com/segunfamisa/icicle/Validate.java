@@ -1,4 +1,10 @@
 package com.segunfamisa.icicle;
 
-public class Validate {
+class Validate {
+
+    static void validateNotNull(Object object, String name) {
+        if (object == null) {
+            throw new NullPointerException("Argument " + name + " cannot be null");
+        }
+    }
 }
