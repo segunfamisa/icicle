@@ -67,6 +67,7 @@ final class BindingClass {
 
     private MethodSpec generateThawMethod() {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("thaw")
+                .addAnnotation(Override.class)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(void.class)
                 //void thaw(final T target, Bundle savedInstanceState);
@@ -80,6 +81,7 @@ final class BindingClass {
 
     private MethodSpec generateFreezeMethod() {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("freeze")
+                .addAnnotation(Override.class)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(void.class)
                 .addParameter(TypeVariableName.get("T"), "target", Modifier.FINAL)
