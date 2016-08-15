@@ -2,6 +2,7 @@ package com.segunfamisa.icicle.processor;
 
 import com.segunfamisa.icicle.annotations.Freeze;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -70,7 +71,6 @@ final class BindingClass {
                 .addAnnotation(Override.class)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(void.class)
-                //void thaw(final T target, Bundle savedInstanceState);
                 .addParameter(TypeVariableName.get("T"), "target", Modifier.FINAL)
                 .addParameter(ClassName.get("android.os", "Bundle"), "savedInstanceState");
 
@@ -87,7 +87,14 @@ final class BindingClass {
                 .addParameter(TypeVariableName.get("T"), "target", Modifier.FINAL)
                 .addParameter(ClassName.get("android.os", "Bundle"), "outState");
 
-        // TODO: 14/08/2016 for each field binding add implementations to save details
+        String state = "state";
+        CodeBlock.Builder codeBlock = CodeBlock.builder();
+        codeBlock.addStatement("this.state = outState");
+        for (FieldBinding binding : fieldBindings.values()) {
+            Bundleables.put(codeBlock, TypeVariableName.get(binding.variableElement.asType()),
+                    state, binding.variableElement);
+        }
+        builder.addCode(codeBlock.build());
 
         return builder.build();
     }

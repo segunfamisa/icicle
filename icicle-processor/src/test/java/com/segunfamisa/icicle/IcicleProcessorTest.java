@@ -18,11 +18,18 @@ public final class IcicleProcessorTest {
                 "package com.segunfamisa.sample;" +
                         "import com.segunfamisa.icicle.annotations.Freeze;" +
                         "import android.content.Intent;" +
+                        "import android.os.Bundle;" +
+                        "import java.util.*;" +
                         "import org.junit.Test;" +
                         "public class SampleActivity {" +
-                        "@Freeze private String name;" +
-                        "@Freeze private int age;" +
-                        "@Freeze(\"counts\") private String count;" +
+                        "@Freeze private Integer name;" +
+                        "@Freeze private int age = 5;" +
+                        "@Freeze private String count;" +
+                        "@Freeze Bundle args;" +
+                        "@Freeze ArrayList<CharSequence> strings;" +
+                        "public SampleActivity() {" +
+                        "age = 3;" +
+                        "}" +
                         "}");
 
         assert_().about(javaSource())

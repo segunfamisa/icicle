@@ -58,7 +58,6 @@ public class IcicleProcessor extends AbstractProcessor {
                 // exit
                 return true;
             }
-
             TypeElement typeElement = (TypeElement) element.getEnclosingElement();
 
             // create binding class for each field
@@ -84,7 +83,6 @@ public class IcicleProcessor extends AbstractProcessor {
     private BindingClass getOrCreateBinding(TypeElement enclosingElement,
                                             Map<TypeElement, BindingClass> fieldBindings) {
         BindingClass binding = fieldBindings.get(enclosingElement);
-
         if (binding == null) {
             String classPackage = getPackageName(enclosingElement);
             String className = getClassName(enclosingElement, classPackage) + "$$Icicle";;
