@@ -29,7 +29,7 @@ public final class Icicle {
         Class<?> targetClass = target.getClass();
 
         if (debug) {
-            log("Looking for icicle for: " + targetClass.getName());
+            logd("Looking for icicle for: " + targetClass.getName());
         }
 
         IIcicleDelegate icicle = findIcicleDeleteForClass(targetClass);
@@ -55,33 +55,36 @@ public final class Icicle {
     private static IIcicleDelegate findIcicleDeleteForClass(Class<?> cls) {
         IIcicleDelegate icicle = ICICLES.get(cls);
         if (icicle == null) {
-
             String className = cls.getName();
             if (className.startsWith(ANDROID_PREFIX) || className.startsWith(JAVA_PREFIX)) {
-                if (debug) {
-                    Log.d(TAG, "Android or Java class detected...exiting");
-                }
+                logd("Android or Java class detected...exiting");
                 return NO_OP;
             }
             try {
                 Class icicleClass = Class.forName(className + SUFFIX);
                 icicle = (IIcicleDelegate) icicleClass.newInstance();
-
             } catch (ClassNotFoundException e) {
-                Log.e(TAG, "Not found...trying superclass");
-
+                loge("Not found...trying superclass");
                 icicle = findIcicleDeleteForClass(cls.getSuperclass());
             } catch (InstantiationException ie) {
-                Log.e(TAG, ie.getMessage());
+                loge(ie.getMessage());
             } catch (IllegalAccessException iae) {
-                Log.e(TAG, iae.getMessage());
+                loge(iae.getMessage());
             }
         }
 
         return icicle;
     }
 
-    private static void log(String message) {
-        Log.d(TAG, message);
+    private static void logd(String message) {
+        if (debug) {
+            Log.d(TAG, message);
+        }
+    }
+
+    private static void loge(String message) {
+        if (debug) {
+            Log.e(TAG, message);
+        }
     }
 }
