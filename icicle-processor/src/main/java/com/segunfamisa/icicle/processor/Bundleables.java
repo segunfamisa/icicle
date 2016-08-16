@@ -7,9 +7,9 @@ import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 
-import java.lang.reflect.Type;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -53,6 +53,7 @@ class Bundleables {
     static final TypeName STRING = ClassName.get("java.lang", "String");
     static final TypeName STRING_ARRAY = ArrayTypeName.of(STRING);
     static final TypeName PERSISTABLE_BUNDLE = ClassName.get("android.os", "ParsistableBundle");
+    static final TypeName MAP = ClassName.get("java.util", "HashMap");
 
     static final TypeName CHARSEQUENCE_ARRAYLIST = ParameterizedTypeName.get((ClassName)LIST,
             CHARSEQUENCE);
@@ -64,71 +65,197 @@ class Bundleables {
     static final TypeName STRING_ARRAYLIST = ParameterizedTypeName.get((ClassName)LIST,
             STRING);
 
-    public static void put(CodeBlock.Builder block, TypeName type,
-                           String state, VariableElement element) {
+    private static Map<Element, TypeName> elementMap = new LinkedHashMap<>();
+
+    static void get(ProcessingEnvironment env, String state, CodeBlock.Builder block, Element element) {
+        Types types = env.getTypeUtils();
+        TypeName parcelableType;
+        if (!elementMap.keySet().contains(element)) {
+            return;
+        }
+        parcelableType = getTypeName(types, element.asType());
+        block.add(getCodeBlock(env, state, parcelableType, element));
+    }
+
+    private static CodeBlock getCodeBlock(ProcessingEnvironment env, String state,
+                                          TypeName parcelableType,
+                                          Element element) {
+        CodeBlock.Builder builder = CodeBlock.builder();
+
+        VariableElement variableElement = (VariableElement)element;
+        String name = variableElement.getSimpleName().toString();
+
+        if (parcelableType.equals(BUNDLE)) {
+            builder.addStatement("target.$L = $L.getBundle($S)", name, state, name);
+        } else if (parcelableType.equals(IBINDER)) {
+            builder.addStatement("target.$L = $L.getBinder($S)", name, state, name);
+        } else if (parcelableType.equals(BOOLEAN) || parcelableType.equals(BOOLEAN.box())) {
+            builder.addStatement("target.$L = $L.getBoolean($S)", name, state, name);
+        } else if (parcelableType.equals(BOOLEAN_ARRAY)) {
+            builder.addStatement("target.$L = $L.getBooleanArray($S)", name, state, name);
+        } else if (parcelableType.equals(BYTE) || parcelableType.equals(BYTE.box())) {
+            builder.addStatement("target.$L = $L.getByte($S)", name, state, name);
+        } else if (parcelableType.equals(BYTE_ARRAY)) {
+            builder.addStatement("target.$L = $L.getByteArray($S)", name, state, name);
+        } else if (parcelableType.equals(CHAR) || parcelableType.equals(CHAR.box())) {
+            builder.addStatement("target.$L = $L.getChar($S)", name, state, name);
+        }else if (parcelableType.equals(CHAR_ARRAY)) {
+            builder.addStatement("target.$L = $L.getCharArray($S)", name, state, name);
+        } else if (parcelableType.equals(CHARSEQUENCE)) {
+            builder.addStatement("target.$L = $L.getCharSequence($S)", name, state, name);
+        } else if (parcelableType.equals(CHARSEQUENCE_ARRAY)) {
+            builder.addStatement("target.$L = $L.getCharSequenceArray($S)", name, state, name);
+        } else if (parcelableType.equals(CHARSEQUENCE_ARRAYLIST)) {
+            builder.addStatement("target.$L = $L.getCharSequenceArrayList($S)", name, state, name);
+        } else if (parcelableType.equals(DOUBLE) || parcelableType.equals(DOUBLE.box())) {
+            builder.addStatement("target.$L = $L.getDouble($S)", name, state, name);
+        } else if (parcelableType.equals(DOUBLE_ARRAY)) {
+            builder.addStatement("target.$L = $L.getDoubleArray($S)", name, state, name);
+        } else if (parcelableType.equals(FLOAT) || parcelableType.equals(FLOAT.box())) {
+            builder.addStatement("target.$L = $L.getFloat($S)", name, state, name);
+        } else if (parcelableType.equals(FLOAT_ARRAY)) {
+            builder.addStatement("target.$L = $L.getFloatArray($S)", name, state, name);
+        } else if (parcelableType.equals(INT) || parcelableType.equals(INT.box())) {
+            builder.addStatement("target.$L = $L.getInt($S)", name, state, name);
+        } else if (parcelableType.equals(INT_ARRAY)) {
+            builder.addStatement("target.$L = $L.getIntArray($S)", name, state, name);
+        } else if (parcelableType.equals(INT_ARRAYLIST)) {
+            builder.addStatement("target.$L = $L.getIntegerArrayList($S)", name, state, name);
+        } else if (parcelableType.equals(LONG) || parcelableType.equals(LONG.box())) {
+            builder.addStatement("target.$L = $L.getLong($S)", name, state, name);
+        } else if (parcelableType.equals(LONG_ARRAY)) {
+            builder.addStatement("target.$L = $L.getLongArray($S)", name, state, name);
+        } else if (parcelableType.equals(PARCELABLE)) {
+            builder.addStatement("target.$L = $L.getParcelable($S)", name, state, name);
+        } else if (parcelableType.equals(PARCELABLE_ARRAY)) {
+            builder.addStatement("target.$L = $L.getParcelableArray($S)", name, state, name);
+        } else if (parcelableType.equals(PARCELABLE_ARRAYLIST)) {
+            builder.addStatement("target.$L = $L.getParcelableArrayList($S)", name, state, name);
+        } else if (parcelableType.equals(SHORT) || parcelableType.equals(SHORT.box())) {
+            builder.addStatement("target.$L = $L.getShort($S)", name, state, name);
+        } else if (parcelableType.equals(SHORT_ARRAY)) {
+            builder.addStatement("target.$L = $L.getShortArray($S)", name, state, name);
+        } else if (parcelableType.equals(SIZE)) {
+            builder.addStatement("target.$L = $L.getSize($S)", name, state, name);
+        } else if (parcelableType.equals(SIZEF)) {
+            builder.addStatement("target.$L = $L.getSizeF($S)", name, state, name);
+        } else if (parcelableType.equals(SPARSE_PARCELABE_ARRAY)) {
+            builder.addStatement("target.$L = $L.getSparceParcelableArray($S)", name, state, name);
+        } else if (parcelableType.equals(STRING)) {
+            builder.addStatement("target.$L = $L.getString($S)", name, state, name);
+        } else if (parcelableType.equals(STRING_ARRAY)) {
+            builder.addStatement("target.$L = $L.getStringArray($S)", name, state, name);
+        } else if (parcelableType.equals(STRING_ARRAYLIST)) {
+            builder.addStatement("target.$L = $L.getStringArrayList($S)", name, state, name);
+        } else if (parcelableType.equals(SERIALIZABLE)) {
+            TypeElement typeElement = (TypeElement) env.getTypeUtils().asElement(element.asType());
+            builder.addStatement("target.$L = ($T)$L.getSerializable($S)", name, ClassName.get(typeElement),
+                    state, name);
+        }
+
+        return builder.build();
+    }
+
+    static void put(ProcessingEnvironment env, CodeBlock.Builder block, TypeName type,
+                    String state, Element element) {
         String name = element.getSimpleName().toString();
-        if (type.equals(BUNDLE)) {
+        TypeName parcelableType = getTypeName(env.getTypeUtils(), element.asType());
+        if (parcelableType.equals(BUNDLE)) {
             block.addStatement("$L.putBundle($S,target.$L)", state, name, name);
-        } else if (type.equals(IBINDER)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(IBINDER)) {
             block.addStatement("$L.putBinder($S,target.$L)", state, name, name);
-        } else if (type.equals(BOOLEAN) || type.equals(BOOLEAN.box())) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(BOOLEAN) || parcelableType.equals(BOOLEAN.box())) {
             block.addStatement("$L.putBoolean($S,target.$L)", state, name, name);
-        } else if (type.equals(BOOLEAN_ARRAY)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(BOOLEAN_ARRAY)) {
             block.addStatement("$L.putBooleanArray($S,target.$L)", state, name, name);
-        } else if (type.equals(BYTE) || type.equals(BYTE.box())) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(BYTE) || parcelableType.equals(BYTE.box())) {
             block.addStatement("$L.putByte($S,target.$L)", state, name, name);
-        } else if (type.equals(BYTE_ARRAY)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(BYTE_ARRAY)) {
             block.addStatement("$L.putByteArray($S,target.$L)", state, name, name);
-        } else if (type.equals(CHAR) || type.equals(CHAR.box())) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(CHAR) || parcelableType.equals(CHAR.box())) {
             block.addStatement("$L.putChar($S,target.$L)", state, name, name);
-        } else if (type.equals(CHAR_ARRAY)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(CHAR_ARRAY)) {
             block.addStatement("$L.putCharArray($S,target.$L)", state, name, name);
-        } else if (type.equals(CHARSEQUENCE)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(CHARSEQUENCE)) {
             block.addStatement("$L.putCharSequence($S,target.$L)", state, name, name);
-        } else if (type.equals(CHARSEQUENCE_ARRAY)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(CHARSEQUENCE_ARRAY)) {
             block.addStatement("$L.putCharSequenceArray($S,target.$L)", state, name, name);
-        } else if (type.equals(CHARSEQUENCE_ARRAYLIST)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(CHARSEQUENCE_ARRAYLIST)) {
             block.addStatement("$L.putCharSequenceArrayList($S,target.$L)", state, name, name);
-        } else if (type.equals(DOUBLE) || type.equals(DOUBLE.box())) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(DOUBLE) || parcelableType.equals(DOUBLE.box())) {
             block.addStatement("$L.putDouble($S,target.$L)", state, name, name);
-        } else if (type.equals(DOUBLE_ARRAY)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(DOUBLE_ARRAY)) {
             block.addStatement("$L.putDoubleArray($S,target.$L)", state, name, name);
-        } else if (type.equals(FLOAT) || type.equals(FLOAT.box())) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(FLOAT) || parcelableType.equals(FLOAT.box())) {
             block.addStatement("$L.putFloat($S,target.$L)", state, name, name);
-        } else if (type.equals(FLOAT_ARRAY)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(FLOAT_ARRAY)) {
             block.addStatement("$L.putFloatArray($S,target.$L)", state, name, name);
-        } else if (type.equals(INT) || type.equals(INT.box())) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(INT) || parcelableType.equals(INT.box())) {
             block.addStatement("$L.putInt($S,target.$L)", state, name, name);
-        } else if (type.equals(INT_ARRAY)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(INT_ARRAY)) {
             block.addStatement("$L.putIntArray($S,target.$L)", state, name, name);
-        } else if (type.equals(INT_ARRAYLIST)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(INT_ARRAYLIST)) {
             block.addStatement("$L.putIntegerArrayList($S,target.$L)", state, name, name);
-        } else if (type.equals(LONG) || type.equals(LONG.box())) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(LONG) || parcelableType.equals(LONG.box())) {
             block.addStatement("$L.putLong($S,target.$L)", state, name, name);
-        } else if (type.equals(LONG_ARRAY)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(LONG_ARRAY)) {
             block.addStatement("$L.putLongArray($S,target.$L)", state, name, name);
-        } else if (type.equals(PARCELABLE)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(PARCELABLE)) {
             block.addStatement("$L.putParcelable($S,target.$L)", state, name, name);
-        } else if (type.equals(PARCELABLE_ARRAY)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(PARCELABLE_ARRAY)) {
             block.addStatement("$L.putParcelableArray($S,target.$L)", state, name, name);
-        } else if (type.equals(PARCELABLE_ARRAYLIST)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(PARCELABLE_ARRAYLIST)) {
             block.addStatement("$L.putParcelableArrayList($S,target.$L)", state, name, name);
-        } else if (type.equals(SHORT) || type.equals(SHORT.box())) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(SHORT) || parcelableType.equals(SHORT.box())) {
             block.addStatement("$L.putShort($S,target.$L)", state, name, name);
-        } else if (type.equals(SHORT_ARRAY)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(SHORT_ARRAY)) {
             block.addStatement("$L.putShortArray($S,target.$L)", state, name, name);
-        } else if (type.equals(SIZE)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(SIZE)) {
             block.addStatement("$L.putSize($S,target.$L)", state, name, name);
-        } else if (type.equals(SIZEF)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(SIZEF)) {
             block.addStatement("$L.putSizeF($S,target.$L)", state, name, name);
-        } else if (type.equals(SPARSE_PARCELABE_ARRAY)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(SPARSE_PARCELABE_ARRAY)) {
             block.addStatement("$L.putSparseParcelableArray($S,target.$L)", state, name, name);
-        } else if (type.equals(STRING)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(STRING)) {
             block.addStatement("$L.putString($S,target.$L)", state, name, name);
-        } else if (type.equals(STRING_ARRAY)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(STRING_ARRAY)) {
             block.addStatement("$L.putStringArray($S,target.$L)", state, name, name);
-        } else if (type.equals(STRING_ARRAYLIST)) {
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(STRING_ARRAYLIST)) {
             block.addStatement("$L.putStringArrayList($S,target.$L)", state, name, name);
+            elementMap.put(element, type);
+        } else if (parcelableType.equals(SERIALIZABLE)) {
+            block.addStatement("$L.putSerializable($S,target.$L)", state, name, name);
+            elementMap.put(element, type);
         }
     }
 
@@ -138,4 +265,95 @@ class Bundleables {
             INT_ARRAYLIST, LONG_ARRAY, PARCELABLE, PARCELABLE_ARRAY, PARCELABLE_ARRAYLIST,
             SERIALIZABLE, SHORT, SHORT_ARRAY, SIZE, SIZEF, SPARSE_PARCELABE_ARRAY, STRING,
             STRING_ARRAY, STRING_ARRAYLIST, PERSISTABLE_BUNDLE);
+
+    private static TypeName getTypeName(Types types, TypeMirror typeMirror) {
+        TypeElement element = (TypeElement) types.asElement(typeMirror);
+        if (element != null) {
+            return getParcelableType(types, element);
+        }
+        return ClassName.get(typeMirror);
+    }
+
+    private static TypeName getParcelableType(Types types, TypeElement type) {
+        TypeMirror typeMirror = type.asType();
+        while (typeMirror.getKind() != TypeKind.NONE) {
+            TypeName typeName = TypeName.get(typeMirror);
+
+            // first, check if the class is valid.
+            if (typeName instanceof ParameterizedTypeName) {
+                typeName = ((ParameterizedTypeName) typeName).rawType;
+            }
+            if (isValidType(typeName)) {
+                return typeName;
+            }
+
+            // then check if it implements valid interfaces
+            for (TypeMirror iface : type.getInterfaces()) {
+                TypeName inherited = getParcelableType(types, (TypeElement) types.asElement(iface));
+                if (inherited != null) {
+                    return inherited;
+                }
+            }
+
+            // then move on
+            type = (TypeElement) types.asElement(typeMirror);
+            typeMirror = type.getSuperclass();
+        }
+        return null;
+    }
+
+    private static boolean isValidType(TypeName typeName) {
+        return typeName.isPrimitive() || typeName.isBoxedPrimitive() || VALID_TYPES.contains(typeName);
+    }
+
+    private static boolean isValidType(Types types, TypeMirror type) {
+        // Special case for MAP, since it can only have String keys and Parcelable values
+        if (isOfType(types, type, MAP)) {
+            return isValidMap(types, type);
+        }
+
+        return getParcelableType(types, (TypeElement) types.asElement(type)) != null;
+    }
+
+    /**
+     * Maps can only have String keys and Parcelable values.
+     */
+    private static boolean isValidMap(Types types, TypeMirror type) {
+        return type.accept(new SimpleTypeVisitor6<Boolean, Types>() {
+            @Override public Boolean visitDeclared(DeclaredType t, Types o) {
+                List<? extends TypeMirror> args = t.getTypeArguments();
+                if (args.size() == 2) {
+                    TypeMirror key = args.get(0);
+                    TypeMirror value = args.get(1);
+                    if (STRING.equals(TypeName.get(key)) && isValidType(o, value)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }, types);
+    }
+
+    private static boolean isOfType(Types types, TypeMirror typeMirror, TypeName target) {
+        TypeElement element = (TypeElement) types.asElement(typeMirror);
+        while (typeMirror.getKind() != TypeKind.NONE) {
+            TypeName typeName = TypeName.get(typeMirror);
+            if (typeName instanceof ParameterizedTypeName) {
+                typeName = ((ParameterizedTypeName) typeName).rawType;
+            }
+            if (typeName.equals(target)) {
+                return true;
+            }
+
+            for (TypeMirror iface : element.getInterfaces()) {
+                if (isOfType(types, iface, target)) {
+                    return true;
+                }
+            }
+
+            element = (TypeElement) types.asElement(typeMirror);
+            typeMirror = element.getSuperclass();
+        }
+        return false;
+    }
 }

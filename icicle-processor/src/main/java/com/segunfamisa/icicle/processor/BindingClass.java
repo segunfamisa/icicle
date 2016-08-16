@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.processing.Filer;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
@@ -42,15 +43,16 @@ final class BindingClass {
         }
     }
 
-    void writeToFiler(Filer filer) throws IOException {
+    void writeToFiler(ProcessingEnvironment env) throws IOException {
+        Filer filer = env.getFiler();
         ClassName targetClassName = ClassName.get(classPackage, targetClass);
 
         TypeSpec.Builder icicle = TypeSpec.classBuilder(className)
                 .addModifiers(Modifier.PUBLIC)
                 .addTypeVariable(TypeVariableName.get("T", targetClassName))
                 .addField(generateBundleField())
-                .addMethod(generateFreezeMethod())
-                .addMethod(generateThawMethod());
+                .addMethod(generateFreezeMethod(env))
+                .addMethod(generateThawMethod(env));
 
         ClassName callback = ClassName.get("com.segunfamisa.icicle", "IIcicleDelegate");
         icicle.addSuperinterface(ParameterizedTypeName.get(callback, TypeVariableName.get("T")));
@@ -66,7 +68,7 @@ final class BindingClass {
         return builder.build();
     }
 
-    private MethodSpec generateThawMethod() {
+    private MethodSpec generateThawMethod(ProcessingEnvironment env) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("thaw")
                 .addAnnotation(Override.class)
                 .addModifiers(Modifier.PUBLIC)
@@ -74,12 +76,18 @@ final class BindingClass {
                 .addParameter(TypeVariableName.get("T"), "target", Modifier.FINAL)
                 .addParameter(ClassName.get("android.os", "Bundle"), "savedInstanceState");
 
-        // TODO: 14/08/2016 for each field binding, retrieve the item from the bundle
+        String state = "savedInstanceState";
+        CodeBlock.Builder codeBlock = CodeBlock.builder();
+        for (FieldBinding binding : fieldBindings.values()) {
+            Bundleables.get(env, state, codeBlock, binding.variableElement);
+        }
+
+        builder.addCode(codeBlock.build());
 
         return builder.build();
     }
 
-    private MethodSpec generateFreezeMethod() {
+    private MethodSpec generateFreezeMethod(ProcessingEnvironment env) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("freeze")
                 .addAnnotation(Override.class)
                 .addModifiers(Modifier.PUBLIC)
@@ -91,7 +99,7 @@ final class BindingClass {
         CodeBlock.Builder codeBlock = CodeBlock.builder();
         codeBlock.addStatement("this.state = outState");
         for (FieldBinding binding : fieldBindings.values()) {
-            Bundleables.put(codeBlock, TypeVariableName.get(binding.variableElement.asType()),
+            Bundleables.put(env, codeBlock, TypeVariableName.get(binding.variableElement.asType()),
                     state, binding.variableElement);
         }
         builder.addCode(codeBlock.build());
@@ -111,7 +119,6 @@ final class BindingClass {
                 throws ProcessingException {
             final String key;
             if (annotationClass.equals(Freeze.class.getSimpleName())) {
-                final Freeze instance = element.getAnnotation(Freeze.class);
                 return new FieldBinding(element);
             } else {
                 throw new ProcessingException(element,

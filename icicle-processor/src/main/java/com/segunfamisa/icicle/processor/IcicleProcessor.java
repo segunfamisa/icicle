@@ -17,6 +17,7 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
@@ -58,6 +59,13 @@ public class IcicleProcessor extends AbstractProcessor {
                 // exit
                 return true;
             }
+            if (element.getModifiers().contains(Modifier.PRIVATE)
+                    || element.getModifiers().contains(Modifier.FINAL)
+                    || element.getModifiers().contains(Modifier.STATIC)) {
+                error(element, "Only Non-private, Non-final, and Non-static Fields can be annoted " +
+                        "with @%s", Freeze.class.getSimpleName());
+                return true;
+            }
             TypeElement typeElement = (TypeElement) element.getEnclosingElement();
 
             // create binding class for each field
@@ -70,7 +78,7 @@ public class IcicleProcessor extends AbstractProcessor {
         for (BindingClass binding : fieldBindings.values()) {
             // write each binding to filer
             try {
-                binding.writeToFiler(filer);
+                binding.writeToFiler(processingEnv);
             } catch (IOException e) {
                 messager.printMessage(Diagnostic.Kind.ERROR, e.getMessage());
             }
@@ -84,8 +92,8 @@ public class IcicleProcessor extends AbstractProcessor {
                                             Map<TypeElement, BindingClass> fieldBindings) {
         BindingClass binding = fieldBindings.get(enclosingElement);
         if (binding == null) {
-            String classPackage = getPackageName(enclosingElement);
-            String className = getClassName(enclosingElement, classPackage) + "$$Icicle";;
+            String classPackage = StringUtils.getPackageName(elementUtils, enclosingElement);
+            String className = StringUtils.getClassName(enclosingElement, classPackage) + "$$Icicle";;
             String targetClass = enclosingElement.getQualifiedName().toString();
 
             binding =  new BindingClass(classPackage, className, targetClass);
@@ -94,14 +102,7 @@ public class IcicleProcessor extends AbstractProcessor {
         return binding;
     }
 
-    private static String getClassName(TypeElement type, String packageName) {
-        int packageLen = packageName.length() + 1;
-        return type.getQualifiedName().toString().substring(packageLen).replace('.', '$');
-    }
 
-    private String getPackageName(TypeElement type) {
-        return elementUtils.getPackageOf(type).getQualifiedName().toString();
-    }
 
     private void error(Element e, String msg, Object... args) {
         messager.printMessage(
