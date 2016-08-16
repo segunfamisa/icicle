@@ -9,9 +9,9 @@ import java.util.Map;
 
 public final class Icicle {
 
-    public static final String SUFFIX = "$$Icicle";
-    public static final String ANDROID_PREFIX = "android.";
-    public static final String JAVA_PREFIX = "java.";
+    private static final String SUFFIX = "$$Icicle";
+    private static final String ANDROID_PREFIX = "android.";
+    private static final String JAVA_PREFIX = "java.";
     private static final IIcicleDelegate NO_OP = null;
     private static final Map<Class<?>, IIcicleDelegate> ICICLES = new LinkedHashMap<>();
 
