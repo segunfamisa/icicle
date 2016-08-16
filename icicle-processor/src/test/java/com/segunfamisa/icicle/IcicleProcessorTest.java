@@ -20,15 +20,21 @@ public final class IcicleProcessorTest {
                         "import android.content.Intent;" +
                         "import android.os.Bundle;" +
                         "import java.util.*;" +
+                        "import java.io.Serializable;" +
                         "import org.junit.Test;" +
                         "public class SampleActivity {" +
-                        "@Freeze private Integer name;" +
-                        "@Freeze private int age = 5;" +
-                        "@Freeze private String count;" +
+                        "@Freeze Integer name;" +
+                        "@Freeze int age = 5;" +
+                        "@Freeze String count;" +
                         "@Freeze Bundle args;" +
                         "@Freeze ArrayList<CharSequence> strings;" +
+                        "@Freeze HashMap<String, String> map;" +
+                        "@Freeze Seria serializableItem;" +
                         "public SampleActivity() {" +
                         "age = 3;" +
+                        "}" +
+                        "private class Seria implements Serializable {" +
+                        "int j = 3;" +
                         "}" +
                         "}");
 
