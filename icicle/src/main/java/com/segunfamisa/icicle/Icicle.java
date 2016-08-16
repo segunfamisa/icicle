@@ -49,6 +49,19 @@ public final class Icicle {
     public static void thaw(Object target, Bundle savedInstanceState,
                             PersistableBundle persistentState) {
         Validate.validateNotNull(target, "target");
+
+        Class<?> targetClass = target.getClass();
+
+        if (debug) {
+            logd("Looking for icicle for: " + targetClass.getName());
+        }
+
+        if (savedInstanceState != null) {
+            IIcicleDelegate icicle = findIcicleDeleteForClass(targetClass);
+            if (icicle != null) {
+                icicle.thaw(target, savedInstanceState);
+            }
+        }
     }
 
 
