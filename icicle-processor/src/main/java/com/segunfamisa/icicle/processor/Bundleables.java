@@ -1,5 +1,6 @@
 package com.segunfamisa.icicle.processor;
 
+import com.google.common.collect.ImmutableSet;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -131,44 +132,10 @@ class Bundleables {
         }
     }
 
-    private static Set<TypeName> VALID_TYPES = new HashSet<>();
-    static {
-        Set<TypeName> validTypes = new HashSet<>();
-        validTypes.add(BUNDLE);
-        validTypes.add(IBINDER);
-        validTypes.add(BOOLEAN);
-        validTypes.add(BOOLEAN_ARRAY);
-        validTypes.add(BYTE);
-        validTypes.add(BYTE_ARRAY);
-        validTypes.add(CHAR);
-        validTypes.add(CHAR_ARRAY);
-        validTypes.add(CHARSEQUENCE);
-        validTypes.add(CHARSEQUENCE_ARRAY);
-        validTypes.add(DOUBLE);
-        validTypes.add(DOUBLE_ARRAY);
-        validTypes.add(LIST);
-        validTypes.add(FLOAT);
-        validTypes.add(FLOAT_ARRAY);
-        validTypes.add(INT);
-        validTypes.add(INT_ARRAY);
-        validTypes.add(INT_ARRAYLIST);
-        validTypes.add(LONG);
-        validTypes.add(LONG_ARRAY);
-        validTypes.add(PARCELABLE);
-        validTypes.add(PARCELABLE_ARRAY);
-        validTypes.add(PARCELABLE_ARRAYLIST);
-        validTypes.add(SERIALIZABLE);
-        validTypes.add(SHORT);
-        validTypes.add(SHORT_ARRAY);
-        validTypes.add(SIZE);
-        validTypes.add(SIZEF);
-        validTypes.add(SPARSE_PARCELABE_ARRAY);
-        validTypes.add(STRING);
-        validTypes.add(STRING_ARRAY);
-        validTypes.add(STRING_ARRAYLIST);
-        validTypes.add(PERSISTABLE_BUNDLE);
-
-        VALID_TYPES = validTypes;
-
-    }
+    private static final Set<TypeName> VALID_TYPES = ImmutableSet.of(BUNDLE, IBINDER, BOOLEAN, BOOLEAN_ARRAY,
+            BYTE, BYTE_ARRAY, CHAR, CHAR_ARRAY, CHARSEQUENCE, CHARSEQUENCE_ARRAY,
+            CHARSEQUENCE_ARRAYLIST, DOUBLE, DOUBLE_ARRAY, FLOAT, FLOAT_ARRAY, INT, INT_ARRAY,
+            INT_ARRAYLIST, LONG_ARRAY, PARCELABLE, PARCELABLE_ARRAY, PARCELABLE_ARRAYLIST,
+            SERIALIZABLE, SHORT, SHORT_ARRAY, SIZE, SIZEF, SPARSE_PARCELABE_ARRAY, STRING,
+            STRING_ARRAY, STRING_ARRAYLIST, PERSISTABLE_BUNDLE);
 }
