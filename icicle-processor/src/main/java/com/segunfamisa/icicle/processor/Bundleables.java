@@ -65,12 +65,22 @@ class Bundleables {
     static final TypeName STRING_ARRAYLIST = ParameterizedTypeName.get((ClassName)LIST,
             STRING);
 
-    private static Map<Element, TypeName> elementMap = new LinkedHashMap<>();
+    private static Map<Element, TypeName> elementsMap = new LinkedHashMap<>();
 
-    static void get(ProcessingEnvironment env, String state, CodeBlock.Builder block, Element element) {
+    /**
+     * Generates codeblock to persist elements from the oustate
+     *
+     * @param env
+     * @param state
+     * @param block
+     * @param element
+     * @throws ProcessingException
+     */
+    static void get(ProcessingEnvironment env, String state, CodeBlock.Builder block, Element element)
+            throws ProcessingException {
         Types types = env.getTypeUtils();
         TypeName parcelableType;
-        if (!elementMap.keySet().contains(element)) {
+        if (!elementsMap.keySet().contains(element)) {
             return;
         }
         parcelableType = getTypeName(types, element.asType());
@@ -79,7 +89,7 @@ class Bundleables {
 
     private static CodeBlock getCodeBlock(ProcessingEnvironment env, String state,
                                           TypeName parcelableType,
-                                          Element element) {
+                                          Element element) throws ProcessingException {
         CodeBlock.Builder builder = CodeBlock.builder();
 
         VariableElement variableElement = (VariableElement)element;
@@ -151,111 +161,129 @@ class Bundleables {
             TypeElement typeElement = (TypeElement) env.getTypeUtils().asElement(element.asType());
             builder.addStatement("target.$L = ($T)$L.getSerializable($S)", name, ClassName.get(typeElement),
                     state, name);
+        } else {
+            throw new ProcessingException(element,
+                    "The type @%s is not supported yet",
+                    env.getTypeUtils().asElement(element.asType()).getSimpleName().toString());
         }
 
         return builder.build();
     }
 
+    /**
+     * Generates codeblock to put back elements into the bundle
+     *
+     * @param env
+     * @param block
+     * @param type
+     * @param state
+     * @param element
+     * @throws ProcessingException
+     */
     static void put(ProcessingEnvironment env, CodeBlock.Builder block, TypeName type,
-                    String state, Element element) {
+                    String state, Element element) throws ProcessingException {
         String name = element.getSimpleName().toString();
         TypeName parcelableType = getTypeName(env.getTypeUtils(), element.asType());
         if (parcelableType.equals(BUNDLE)) {
             block.addStatement("$L.putBundle($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(IBINDER)) {
             block.addStatement("$L.putBinder($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(BOOLEAN) || parcelableType.equals(BOOLEAN.box())) {
             block.addStatement("$L.putBoolean($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(BOOLEAN_ARRAY)) {
             block.addStatement("$L.putBooleanArray($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(BYTE) || parcelableType.equals(BYTE.box())) {
             block.addStatement("$L.putByte($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(BYTE_ARRAY)) {
             block.addStatement("$L.putByteArray($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(CHAR) || parcelableType.equals(CHAR.box())) {
             block.addStatement("$L.putChar($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(CHAR_ARRAY)) {
             block.addStatement("$L.putCharArray($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(CHARSEQUENCE)) {
             block.addStatement("$L.putCharSequence($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(CHARSEQUENCE_ARRAY)) {
             block.addStatement("$L.putCharSequenceArray($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(CHARSEQUENCE_ARRAYLIST)) {
             block.addStatement("$L.putCharSequenceArrayList($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(DOUBLE) || parcelableType.equals(DOUBLE.box())) {
             block.addStatement("$L.putDouble($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(DOUBLE_ARRAY)) {
             block.addStatement("$L.putDoubleArray($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(FLOAT) || parcelableType.equals(FLOAT.box())) {
             block.addStatement("$L.putFloat($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(FLOAT_ARRAY)) {
             block.addStatement("$L.putFloatArray($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(INT) || parcelableType.equals(INT.box())) {
             block.addStatement("$L.putInt($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(INT_ARRAY)) {
             block.addStatement("$L.putIntArray($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(INT_ARRAYLIST)) {
             block.addStatement("$L.putIntegerArrayList($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(LONG) || parcelableType.equals(LONG.box())) {
             block.addStatement("$L.putLong($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(LONG_ARRAY)) {
             block.addStatement("$L.putLongArray($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(PARCELABLE)) {
             block.addStatement("$L.putParcelable($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(PARCELABLE_ARRAY)) {
             block.addStatement("$L.putParcelableArray($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(PARCELABLE_ARRAYLIST)) {
             block.addStatement("$L.putParcelableArrayList($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(SHORT) || parcelableType.equals(SHORT.box())) {
             block.addStatement("$L.putShort($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(SHORT_ARRAY)) {
             block.addStatement("$L.putShortArray($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(SIZE)) {
             block.addStatement("$L.putSize($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(SIZEF)) {
             block.addStatement("$L.putSizeF($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(SPARSE_PARCELABE_ARRAY)) {
             block.addStatement("$L.putSparseParcelableArray($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(STRING)) {
             block.addStatement("$L.putString($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(STRING_ARRAY)) {
             block.addStatement("$L.putStringArray($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(STRING_ARRAYLIST)) {
             block.addStatement("$L.putStringArrayList($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
         } else if (parcelableType.equals(SERIALIZABLE)) {
             block.addStatement("$L.putSerializable($S,target.$L)", state, name, name);
-            elementMap.put(element, type);
+            elementsMap.put(element, type);
+        } else {
+            throw new ProcessingException(element,
+                    "The type @%s is not supported yet",
+                    env.getTypeUtils().asElement(element.asType()).getSimpleName().toString());
         }
     }
 

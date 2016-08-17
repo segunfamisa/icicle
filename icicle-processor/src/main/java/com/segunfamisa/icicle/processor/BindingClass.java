@@ -50,7 +50,6 @@ final class BindingClass {
         TypeSpec.Builder icicle = TypeSpec.classBuilder(className)
                 .addModifiers(Modifier.PUBLIC)
                 .addTypeVariable(TypeVariableName.get("T", targetClassName))
-                .addField(generateBundleField())
                 .addMethod(generateFreezeMethod(env))
                 .addMethod(generateThawMethod(env));
 
@@ -59,13 +58,6 @@ final class BindingClass {
 
         JavaFile javaFile = JavaFile.builder(classPackage, icicle.build()).build();
         javaFile.writeTo(filer);
-    }
-
-    private FieldSpec generateBundleField() {
-        FieldSpec.Builder builder = FieldSpec.builder(ClassName.get("android.os", "Bundle"), "state")
-                .addModifiers(Modifier.PRIVATE, Modifier.STATIC);
-
-        return builder.build();
     }
 
     private MethodSpec generateThawMethod(ProcessingEnvironment env) {
@@ -79,7 +71,11 @@ final class BindingClass {
         String state = "savedInstanceState";
         CodeBlock.Builder codeBlock = CodeBlock.builder();
         for (FieldBinding binding : fieldBindings.values()) {
-            Bundleables.get(env, state, codeBlock, binding.variableElement);
+            try {
+                Bundleables.get(env, state, codeBlock, binding.variableElement);
+            } catch (ProcessingException e) {
+                e.printStackTrace();
+            }
         }
 
         builder.addCode(codeBlock.build());
@@ -95,12 +91,15 @@ final class BindingClass {
                 .addParameter(TypeVariableName.get("T"), "target", Modifier.FINAL)
                 .addParameter(ClassName.get("android.os", "Bundle"), "outState");
 
-        String state = "state";
+        String state = "outState";
         CodeBlock.Builder codeBlock = CodeBlock.builder();
-        codeBlock.addStatement("this.state = outState");
         for (FieldBinding binding : fieldBindings.values()) {
-            Bundleables.put(env, codeBlock, TypeVariableName.get(binding.variableElement.asType()),
-                    state, binding.variableElement);
+            try {
+                Bundleables.put(env, codeBlock, TypeVariableName.get(binding.variableElement.asType()),
+                        state, binding.variableElement);
+            } catch (ProcessingException e) {
+                e.printStackTrace();
+            }
         }
         builder.addCode(codeBlock.build());
 
