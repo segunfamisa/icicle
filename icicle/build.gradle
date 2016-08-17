@@ -21,8 +21,14 @@ android {
     }
 }
 
+apply plugin: 'checkstyle'
+
+checkstyle {
+    configFile rootProject.file('checkstyle.xml')
+    showViolations true
+    configProperties = ['checkstyle.cache.file': rootProject.file('build/checkstyle.cache')]
+}
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':icicle-processor')
-    testCompile 'junit:junit:4.12'
 }
