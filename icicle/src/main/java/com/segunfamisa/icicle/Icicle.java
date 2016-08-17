@@ -86,6 +86,7 @@ public final class Icicle {
             }
         }
 
+        ICICLES.put(cls, icicle);
         return icicle;
     }
 
