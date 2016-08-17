@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -24,13 +25,11 @@ android {
     }
 }
 
-repositories {
-    maven {url "https://clojars.org/repo/"}
-}
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    apt project(':icicle-processor')
     compile project(':icicle')
+
     compile 'com.android.support:appcompat-v7:24.0.0-beta1'
     testCompile 'junit:junit:4.12'
 }
