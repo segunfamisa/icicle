@@ -10,13 +10,16 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode rootProject.versionCode
         versionName rootProject.versionName
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 
     compileOptions {
@@ -30,6 +33,7 @@ dependencies {
     apt project(':icicle-processor')
     compile project(':icicle')
 
-    compile 'com.android.support:appcompat-v7:24.0.0-beta1'
-    testCompile 'junit:junit:4.12'
+    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+
+    testCompile "junit:junit:$rootProject.jUnitVersion"
 }
