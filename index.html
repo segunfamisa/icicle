@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Icicle by segunfamisa</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Icicle</h1>
+        <p>An annotation based tool for saving and restoring instance states</p>
+
+        <p class="view"><a href="https://github.com/segunfamisa/Icicle">View the Project on GitHub <small>segunfamisa/Icicle</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/segunfamisa/Icicle/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/segunfamisa/Icicle/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/segunfamisa/Icicle">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="icicle" class="anchor" href="#icicle" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Icicle</h1>
+
+<h2>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Introduction</h2>
+
+<p>Save and restore instance state just by annotating the fields you wish to save.</p>
+
+<p>We all hate boilerplate codes right? We hate to have to do:</p>
+
+<div class="highlight highlight-source-java"><pre>@<span class="pl-smi">Override</span>
+<span class="pl-k">protected</span> <span class="pl-k">void</span> onSaveInstanceState(<span class="pl-smi">Bundle</span> outState) {
+    outState<span class="pl-k">.</span>putString(<span class="pl-c1">AWESOME_STRING</span>, mAwesomeString);
+    outState<span class="pl-k">.</span>putInt(<span class="pl-c1">AWESOME_INT</span>, mAwesomeInt);
+    <span class="pl-v">super</span><span class="pl-k">.</span>onSaveInstanceState(outState);
+}</pre></div>
+
+<p>And then have to do:</p>
+
+<div class="highlight highlight-source-java"><pre>@<span class="pl-smi">Override</span>
+<span class="pl-k">public</span> <span class="pl-k">void</span> onCreate(<span class="pl-smi">Bundle</span> savedInstanceState) {
+    <span class="pl-v">super</span><span class="pl-k">.</span>onCreate(savedInstanceState);
+
+    <span class="pl-k">if</span> (savedInstanceState <span class="pl-k">!=</span> <span class="pl-c1">null</span>) {
+        mAwesomeString <span class="pl-k">=</span> savedInstanceState<span class="pl-k">.</span>getString(<span class="pl-c1">AWESOME_STRING</span>);
+        mAwesomeInt <span class="pl-k">=</span> savedInstanceState<span class="pl-k">.</span>getInt(<span class="pl-c1">AWESOME_INT</span>);
+    }
+}</pre></div>
+
+<p>This is familiar Right?</p>
+
+<p>Icicle does all the hard work for you. It <strong>automagically</strong> (I love that word too)
+saves and restore your instance state.</p>
+
+<h2>
+<a id="whats-new-in-version-100-alpha" class="anchor" href="#whats-new-in-version-100-alpha" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What's new in version <code>1.0.0-alpha</code>
+</h2>
+
+<p>Please check the <a href="CHANGELOG.md">Change Log</a> for what's new</p>
+
+<h2>
+<a id="setting-up" class="anchor" href="#setting-up" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Setting up</h2>
+
+<ul>
+<li> Add APT to your project-level <code>build.gradle</code> file</li>
+</ul>
+
+<div class="highlight highlight-source-groovy"><pre>buildscript {
+    repositories {
+        jcenter() <span class="pl-c">// Also available in maven central</span>
+    }
+    dependencies {
+        <span class="pl-k">..</span>.
+        classpath <span class="pl-s"><span class="pl-pds">'</span>com.neenbedankt.gradle.plugins:android-apt:1.8<span class="pl-pds">'</span></span>
+    }
+}</pre></div>
+
+<ul>
+<li>Add <code>icicle</code> and <code>icicle-processor</code> libraries to your app-module <code>build.gradle</code> file</li>
+</ul>
+
+<div class="highlight highlight-source-groovy"><pre>apply <span class="pl-c1">plugin</span>: <span class="pl-s"><span class="pl-pds">'</span>com.neenbedankt.android-apt<span class="pl-pds">'</span></span>
+
+dependencies {
+    apt <span class="pl-s"><span class="pl-pds">'</span>com.segunfamisa:icicle-processor:1.0.0-alpha<span class="pl-pds">'</span></span>
+    compile <span class="pl-s"><span class="pl-pds">'</span>com.segunfamisa:icicle:1.0.0-alpha<span class="pl-pds">'</span></span>
+}
+</pre></div>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>Using Icicle is simple. Annotate the field variables you wish to persist the state
+with <code>@Freeze</code>, call <code>Icicle.freeze()</code>
+when you want to save, and call <code>Icicle.thaw()</code> when you wish to restore from the state.</p>
+
+<div class="highlight highlight-source-java"><pre>@<span class="pl-smi">Freeze</span>
+<span class="pl-k">int</span> mAwesomeInt;
+
+@<span class="pl-smi">Freeze</span>
+<span class="pl-smi">String</span> mAwesomeString;
+
+@<span class="pl-smi">Override</span>
+<span class="pl-k">public</span> <span class="pl-k">void</span> onCreate(<span class="pl-smi">Bundle</span> savedInstanceState) {
+    <span class="pl-v">super</span><span class="pl-k">.</span>onCreate(savedInstanceState);
+    <span class="pl-smi">Icicle</span><span class="pl-k">.</span>thaw(<span class="pl-v">this</span>, savedInstanceState);
+}
+
+@<span class="pl-smi">Override</span>
+<span class="pl-k">protected</span> <span class="pl-k">void</span> onSaveInstanceState(<span class="pl-smi">Bundle</span> outState) {
+    <span class="pl-smi">Icicle</span><span class="pl-k">.</span>freeze(<span class="pl-v">this</span>, outState);
+    <span class="pl-v">super</span><span class="pl-k">.</span>onSaveInstanceState(outState);
+}</pre></div>
+
+<p>Note: Icicle works only with non-private, non-final and non-static fields.</p>
+
+<h2>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributing</h2>
+
+<p>Contributions are welcome. (Still drafting the rules for contributing)</p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<pre><code>Copyright 2016 Segun Famisa
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/segunfamisa">segunfamisa</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
