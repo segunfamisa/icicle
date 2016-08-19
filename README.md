@@ -3,7 +3,7 @@ Icicle
 
 [![Build Status](https://travis-ci.org/segunfamisa/Icicle.svg?branch=dev)](https://travis-ci.org/segunfamisa/Icicle)
 
-We all hate boiler plates right? We hate to have to do:
+We all hate boilerplate codes right? We hate to have to do:
 
 ```java
 @Override
@@ -57,8 +57,8 @@ buildscript {
 apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
-    apt 'com.segunfamisa:icicle-processor:{{LATEST-VERSION}}'
-    compile 'com.segunfamisa:icicle:{{LATEST-VERSION}}'
+    apt 'com.segunfamisa:icicle-processor:1.0.0-alpha'
+    compile 'com.segunfamisa:icicle:1.0.0-alpha'
 }
 
 ```
