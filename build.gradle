@@ -47,7 +47,13 @@ ext {
 Properties properties = new Properties()
 properties.load(project.file('bintray.properties').newDataInputStream())
 
+Properties localProperties = new Properties()
+localProperties.load(project.file('local.properties').newDataInputStream())
+
 ext {
+    bintrayUser = localProperties.getProperty('bintray.user')
+    bintrayKey = localProperties.getProperty('bintray.apikey')
+
     bintrayRepo = properties.getProperty('bintrayRepo')
 
     publishedGroupId = properties.getProperty('publishedGroupId')

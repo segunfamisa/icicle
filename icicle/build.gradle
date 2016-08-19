@@ -41,7 +41,10 @@ dependencies {
 }
 
 apply plugin: 'com.github.dcendents.android-maven'
+
 ext {
+    user = bintrayUser
+    key = bintrayKey
     bintrayRepo = rootProject.bintrayRepo
     bintrayName = 'icicle'
 
@@ -65,5 +68,5 @@ ext {
     allLicenses = project.allLicenses
 }
 
-apply from: 'https://raw.githubusercontent.com/segunfamisa/JCenter/master/installv1.gradle'
-apply from: 'https://raw.githubusercontent.com/segunfamisa/JCenter/master/bintrayv1.gradle'
+apply from: '../installv1.gradle'
+apply from: 'bintrayv1.gradle'
