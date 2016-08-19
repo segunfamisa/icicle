@@ -7,8 +7,6 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -42,33 +40,4 @@ ext {
     rulesVersion = '0.5'
     espressoVersion = '2.2.2'
     assertJVersion = '1.7.0'
-}
-
-Properties properties = new Properties()
-properties.load(project.file('bintray.properties').newDataInputStream())
-
-Properties localProperties = new Properties()
-localProperties.load(project.file('local.properties').newDataInputStream())
-
-ext {
-    bintrayUser = localProperties.getProperty('bintray.user')
-    bintrayKey = localProperties.getProperty('bintray.apikey')
-
-    bintrayRepo = properties.getProperty('bintrayRepo')
-
-    publishedGroupId = properties.getProperty('publishedGroupId')
-
-    libraryDescription = properties.getProperty('libraryDescription')
-    siteUrl = properties.getProperty('siteUrl')
-    gitUrl = properties.getProperty('gitUrl')
-
-    libraryVersion = properties.getProperty('libraryVersion')
-
-    developerId = properties.getProperty('developerId')
-    developerName = properties.getProperty('developerName')
-    developerEmail = properties.getProperty('developerEmail')
-
-    licenseName = properties.getProperty('licenseName')
-    licenseUrl = properties.getProperty('licenseUrl')
-    allLicenses = properties.getProperty('allLicenses')
 }
