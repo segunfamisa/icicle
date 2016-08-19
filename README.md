@@ -33,6 +33,9 @@ This is familiar Right?
 Icicle does all the hard work for you. It **automagically** (I love that word too)
 saves and restore your instance state.
 
+## What's new in version `1.0.0-alpha`
+Please check the [Change Log](CHANGELOG.md) for what's new
+
 ## Setting up
 
   *  Add APT to your project-level `build.gradle` file
@@ -54,12 +57,11 @@ buildscript {
 apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
-    apt <icicle-processor>
-    compile <icicle>
+    apt 'com.segunfamisa:icicle-processor:{{LATEST-VERSION}}'
+    compile 'com.segunfamisa:icicle:{{LATEST-VERSION}}'
 }
 
 ```
-
 
 ## Usage
 Using Icicle is simple. Annotate the field variables you wish to persist the state
