@@ -10,6 +10,8 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode rootProject.versionCode
         versionName rootProject.versionName
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -30,10 +32,22 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    apt project(':icicle-processor')
-    compile project(':icicle')
-
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
 
+    // Dependencies for local unit tests
     testCompile "junit:junit:$rootProject.jUnitVersion"
+
+    // Android Testing Support Library's runner and rules
+    androidTestCompile ("com.android.support.test:runner:$rootProject.runnerVersion")
+    androidTestCompile ("com.android.support.test:rules:$rootProject.rulesVersion")
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion")
+
+    apt project(':icicle-processor')
+    compile project(':icicle')
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'com.android.support:support-annotations:23.0.0'
+    }
 }

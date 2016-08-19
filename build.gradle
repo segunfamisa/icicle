@@ -38,6 +38,9 @@ ext {
     guavaVersion = '19.0'
     javaPoetVersion = '1.7.0'
     jUnitVersion = '4.12'
+    runnerVersion = '0.5'
+    rulesVersion = '0.5'
+    espressoVersion = '2.2.2'
     assertJVersion = '1.7.0'
 }
 
