@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">sample</string>
+    <string name="text_count">0</string>
+
+    <string name="btn_text_increment">+</string>
+    <string name="btn_text_decrement">-</string>
 </resources>

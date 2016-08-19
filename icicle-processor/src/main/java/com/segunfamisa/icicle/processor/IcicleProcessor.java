@@ -62,8 +62,8 @@ public class IcicleProcessor extends AbstractProcessor {
             if (element.getModifiers().contains(Modifier.PRIVATE)
                     || element.getModifiers().contains(Modifier.FINAL)
                     || element.getModifiers().contains(Modifier.STATIC)) {
-                error(element, "Only Non-private, Non-final, and Non-static Fields can be annoted " +
-                        "with @%s", Freeze.class.getSimpleName());
+                error(element, "Only Non-private, Non-final, and Non-static Fields can be annoted "
+                        + "with @%s", Freeze.class.getSimpleName());
                 return true;
             }
             TypeElement typeElement = (TypeElement) element.getEnclosingElement();
@@ -93,7 +93,7 @@ public class IcicleProcessor extends AbstractProcessor {
         BindingClass binding = fieldBindings.get(enclosingElement);
         if (binding == null) {
             String classPackage = StringUtils.getPackageName(elementUtils, enclosingElement);
-            String className = StringUtils.getClassName(enclosingElement, classPackage) + "$$Icicle";;
+            String className = StringUtils.getClassName(enclosingElement, classPackage) + "$$Icicle";
             String targetClass = enclosingElement.getQualifiedName().toString();
 
             binding =  new BindingClass(classPackage, className, targetClass);

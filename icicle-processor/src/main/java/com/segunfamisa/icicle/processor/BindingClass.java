@@ -3,7 +3,6 @@ package com.segunfamisa.icicle.processor;
 import com.segunfamisa.icicle.annotations.Freeze;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -116,7 +115,6 @@ final class BindingClass {
 
         static FieldBinding newInstance(Element element, String annotationClass)
                 throws ProcessingException {
-            final String key;
             if (annotationClass.equals(Freeze.class.getSimpleName())) {
                 return new FieldBinding(element);
             } else {

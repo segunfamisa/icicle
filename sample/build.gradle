@@ -10,6 +10,7 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode rootProject.versionCode
         versionName rootProject.versionName
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -17,6 +18,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 
     compileOptions {
@@ -27,9 +32,22 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+
+    // Dependencies for local unit tests
+    testCompile "junit:junit:$rootProject.jUnitVersion"
+
+    // Android Testing Support Library's runner and rules
+    androidTestCompile ("com.android.support.test:runner:$rootProject.runnerVersion")
+    androidTestCompile ("com.android.support.test:rules:$rootProject.rulesVersion")
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion")
+
     apt project(':icicle-processor')
     compile project(':icicle')
+}
 
-    compile 'com.android.support:appcompat-v7:24.0.0-beta1'
-    testCompile 'junit:junit:4.12'
+configurations.all {
+    resolutionStrategy {
+        force 'com.android.support:support-annotations:23.0.0'
+    }
 }

@@ -2,35 +2,54 @@ package com.segunfamisa.icicle.sample;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.segunfamisa.icicle.Icicle;
 import com.segunfamisa.icicle.annotations.Freeze;
 
-import java.util.HashMap;
-
 public class MainActivity extends AppCompatActivity {
 
-    @Freeze String name;
-    @Freeze String age;
-    @Freeze int houses;
-    @Freeze HashMap<String, String> map;
+    public static final int DEFAULT_COUNT = 2;
+
+    @Freeze
+    int mCount = DEFAULT_COUNT;
+
+    private TextView mTextCount;
+    private Button mButtonDecr;
+    private Button mButtonIncr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Icicle.thaw(this, savedInstanceState);
         setContentView(R.layout.activity_main);
+        Icicle.thaw(this, savedInstanceState);
 
-        if (savedInstanceState == null) {
-            map = new HashMap<>();
-            map.put("A", "Apple");
-            name = "Segun";
-            age = "23";
-            houses = 5;
-        }
+        mTextCount = (TextView) findViewById(R.id.text_count);
+        mButtonDecr = (Button) findViewById(R.id.button_decrement);
+        mButtonIncr = (Button) findViewById(R.id.button_increment);
 
-        Log.d("MainActivity", map.toString() + "\n" + name + "\n" + age + "\n" + houses);
+        updateCount();
+        mButtonDecr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCount--;
+                updateCount();
+            }
+        });
+
+        mButtonIncr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCount++;
+                updateCount();
+            }
+        });
+    }
+
+    private void updateCount() {
+        mTextCount.setText(String.valueOf(mCount));
     }
 
     @Override

@@ -55,14 +55,14 @@ class Bundleables {
     static final TypeName PERSISTABLE_BUNDLE = ClassName.get("android.os", "ParsistableBundle");
     static final TypeName MAP = ClassName.get("java.util", "HashMap");
 
-    static final TypeName CHARSEQUENCE_ARRAYLIST = ParameterizedTypeName.get((ClassName)LIST,
+    static final TypeName CHARSEQUENCE_ARRAYLIST = ParameterizedTypeName.get((ClassName) LIST,
             CHARSEQUENCE);
-    static final TypeName INT_ARRAYLIST = ParameterizedTypeName.get((ClassName)LIST, INT.box());
-    static final TypeName PARCELABLE_ARRAYLIST = ParameterizedTypeName.get((ClassName)LIST,
+    static final TypeName INT_ARRAYLIST = ParameterizedTypeName.get((ClassName) LIST, INT.box());
+    static final TypeName PARCELABLE_ARRAYLIST = ParameterizedTypeName.get((ClassName) LIST,
             PARCELABLE);
-    static final TypeName SPARSE_PARCELABE_ARRAY = ParameterizedTypeName.get((ClassName)SPARSE_ARRAY,
+    static final TypeName SPARSE_PARCELABE_ARRAY = ParameterizedTypeName.get((ClassName) SPARSE_ARRAY,
             PARCELABLE);
-    static final TypeName STRING_ARRAYLIST = ParameterizedTypeName.get((ClassName)LIST,
+    static final TypeName STRING_ARRAYLIST = ParameterizedTypeName.get((ClassName) LIST,
             STRING);
 
     private static Map<Element, TypeName> elementsMap = new LinkedHashMap<>();
@@ -92,7 +92,7 @@ class Bundleables {
                                           Element element) throws ProcessingException {
         CodeBlock.Builder builder = CodeBlock.builder();
 
-        VariableElement variableElement = (VariableElement)element;
+        VariableElement variableElement = (VariableElement) element;
         String name = variableElement.getSimpleName().toString();
 
         if (parcelableType.equals(BUNDLE)) {
@@ -109,7 +109,7 @@ class Bundleables {
             builder.addStatement("target.$L = $L.getByteArray($S)", name, state, name);
         } else if (parcelableType.equals(CHAR) || parcelableType.equals(CHAR.box())) {
             builder.addStatement("target.$L = $L.getChar($S)", name, state, name);
-        }else if (parcelableType.equals(CHAR_ARRAY)) {
+        } else if (parcelableType.equals(CHAR_ARRAY)) {
             builder.addStatement("target.$L = $L.getCharArray($S)", name, state, name);
         } else if (parcelableType.equals(CHARSEQUENCE)) {
             builder.addStatement("target.$L = $L.getCharSequence($S)", name, state, name);
