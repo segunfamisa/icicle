@@ -39,3 +39,31 @@ dependencies {
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
     testCompile "junit:junit:$rootProject.jUnitVersion"
 }
+
+apply plugin: 'com.github.dcendents.android-maven'
+ext {
+    bintrayRepo = rootProject.bintrayRepo
+    bintrayName = 'icicle'
+
+    libraryName = 'icicle'
+    artifact = 'icicle'
+
+    publishedGroupId = project.publishedGroupId
+
+    libraryDescription = project.libraryDescription
+    siteUrl = project.siteUrl
+    gitUrl = project.gitUrl
+
+    libraryVersion = project.libraryVersion
+
+    deverloperId = project.developerId
+    developerName = project.developerName
+    developerEmail = project.developerEmail
+
+    licenseName = project.licenseName
+    licenseUrl = project.licenseUrl
+    allLicenses = project.allLicenses
+}
+
+apply from: 'https://raw.githubusercontent.com/segunfamisa/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/segunfamisa/JCenter/master/bintrayv1.gradle'
