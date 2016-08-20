@@ -1,7 +1,7 @@
 Icicle
 ========
 
-[![Build Status](https://travis-ci.org/segunfamisa/Icicle.svg?branch=dev)](https://travis-ci.org/segunfamisa/Icicle)
+[![Build Status](https://travis-ci.org/segunfamisa/icicle.svg?branch=master)](https://travis-ci.org/segunfamisa/icicle)
 
 We all hate boilerplate codes right? We hate to have to do:
 
@@ -51,7 +51,7 @@ buildscript {
     }
 }
 ```
-  *
+  * Add icicle and icicle-processor to your app-module-level `build.gradle` file
 
 ```groovy
 apply plugin: 'com.neenbedankt.android-apt'
