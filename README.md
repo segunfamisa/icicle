@@ -92,7 +92,7 @@ Note: Icicle works only with non-private, non-final and non-static fields.
 
 
 ## Contributing
-Contributions are welcome. (Still drafting the rules for contributing)
+Contributions are welcome. Please check the [contributions guide](CONTRIBUTING.md) for more details.
 
 ## License
 
