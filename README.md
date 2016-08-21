@@ -2,6 +2,7 @@ Icicle
 ========
 
 [![Build Status](https://travis-ci.org/segunfamisa/icicle.svg?branch=master)](https://travis-ci.org/segunfamisa/icicle)
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Icicle-green.svg?style=true)](https://android-arsenal.com/details/1/4192)
 
 We all hate boilerplate codes right? We hate to have to do:
 
