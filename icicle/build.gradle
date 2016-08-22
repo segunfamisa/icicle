@@ -36,6 +36,4 @@ checkstyle {
 
 dependencies {
     compile project(':icicle-processor')
-    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
-    testCompile "junit:junit:$rootProject.jUnitVersion"
 }
