@@ -36,7 +36,6 @@ checkstyle {
 
 dependencies {
     compile project(':icicle-processor')
-    testCompile "junit:junit:$rootProject.jUnitVersion"
 }
 
 apply plugin: 'com.github.dcendents.android-maven'
