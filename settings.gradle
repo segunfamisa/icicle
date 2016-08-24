@@ -1,1 +1,1 @@
-include ':icicle-processor', ':icicle', ':sample'
+include ':icicle-processor', ':icicle', ':sample', ':icicle-annotations'

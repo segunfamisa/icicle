@@ -26,16 +26,14 @@ android {
     }
 }
 
+dependencies {
+    compile project(':icicle-annotations')
+}
+
 apply plugin: 'checkstyle'
 
 checkstyle {
     configFile rootProject.file('checkstyle.xml')
     showViolations true
     configProperties = ['checkstyle.cache.file': rootProject.file('build/checkstyle.cache')]
-}
-
-dependencies {
-    compile project(':icicle-processor')
-    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
-    testCompile "junit:junit:$rootProject.jUnitVersion"
 }

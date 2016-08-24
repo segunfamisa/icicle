@@ -35,7 +35,7 @@ This is familiar Right?
 Icicle does all the hard work for you. It **automagically** (I love that word too)
 saves and restore your instance state.
 
-## What's new in version `1.0.0-alpha`
+## What's new in version `1.0.0`
 Please check the [Change Log](CHANGELOG.md) for what's new
 
 ## Setting up
@@ -58,9 +58,15 @@ buildscript {
 ```groovy
 apply plugin: 'com.neenbedankt.android-apt'
 
+repositories {
+    maven {
+        url "https://dl.bintray.com/segunfamisa/maven/"
+    }
+}
+
 dependencies {
-    apt 'com.segunfamisa:icicle-processor:1.0.0-alpha'
-    compile 'com.segunfamisa:icicle:1.0.0-alpha'
+    apt 'com.segunfamisa:icicle-processor:1.0.0'
+    compile 'com.segunfamisa:icicle:1.0.0'
 }
 
 ```
