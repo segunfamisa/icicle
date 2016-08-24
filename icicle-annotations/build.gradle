@@ -2,8 +2,8 @@ apply plugin: 'java'
 apply plugin: 'checkstyle'
 apply plugin: 'com.github.dcendents.android-maven'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+targetCompatibility = JavaVersion.VERSION_1_7
+sourceCompatibility = JavaVersion.VERSION_1_7
 
 checkstyle {
     configFile rootProject.file('checkstyle.xml')
@@ -11,30 +11,12 @@ checkstyle {
     configProperties = ['checkstyle.cache.file': rootProject.file('build/checkstyle.cache')]
 }
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
-    compile "com.squareup:javapoet:$rootProject.javaPoetVersion"
-    compile "com.google.guava:guava:$rootProject.guavaVersion"
-
-    testCompile "junit:junit:$rootProject.jUnitVersion"
-    testCompile "org.assertj:assertj-core:$rootProject.assertJVersion"
-    testCompile "com.google.android:android:$rootProject.androidVersion"
-    testCompile 'com.google.testing.compile:compile-testing:0.6'
-    testCompile 'org.mockito:mockito-core:1.10.19'
-    testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
-}
-
-dependencies {
-    compile project(':icicle-annotations')
-}
-
 ext {
     bintrayRepo = rootProject.bintrayRepo
-    bintrayName = 'icicle-processor'
+    bintrayName = 'icicle-annotations'
 
-    libraryName = 'icicle-processor'
-    artifact = 'icicle-processor'
+    libraryName = 'icicle-annotations'
+    artifact = 'icicle-annotations'
 
     publishedGroupId = project.publishedGroupId
 
