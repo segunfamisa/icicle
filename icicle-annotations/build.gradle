@@ -1,6 +1,5 @@
 apply plugin: 'java'
 apply plugin: 'checkstyle'
-apply plugin: 'com.github.dcendents.android-maven'
 
 targetCompatibility = JavaVersion.VERSION_1_7
 sourceCompatibility = JavaVersion.VERSION_1_7
@@ -10,30 +9,3 @@ checkstyle {
     showViolations true
     configProperties = ['checkstyle.cache.file': rootProject.file('build/checkstyle.cache')]
 }
-
-ext {
-    bintrayRepo = rootProject.bintrayRepo
-    bintrayName = 'icicle-annotations'
-
-    libraryName = 'icicle-annotations'
-    artifact = 'icicle-annotations'
-
-    publishedGroupId = project.publishedGroupId
-
-    libraryDescription = project.libraryDescription
-    siteUrl = project.siteUrl
-    gitUrl = project.gitUrl
-
-    libraryVersion = project.libraryVersion
-
-    deverloperId = project.developerId
-    developerName = project.developerName
-    developerEmail = project.developerEmail
-
-    licenseName = project.licenseName
-    licenseUrl = project.licenseUrl
-    allLicenses = project.allLicenses
-}
-
-apply from: '../installv1.gradle'
-apply from: 'bintrayv1.gradle'

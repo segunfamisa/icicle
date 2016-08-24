@@ -37,34 +37,3 @@ checkstyle {
     showViolations true
     configProperties = ['checkstyle.cache.file': rootProject.file('build/checkstyle.cache')]
 }
-
-apply plugin: 'com.github.dcendents.android-maven'
-
-ext {
-    user = bintrayUser
-    key = bintrayKey
-    bintrayRepo = rootProject.bintrayRepo
-    bintrayName = 'icicle'
-
-    libraryName = 'icicle'
-    artifact = 'icicle'
-
-    publishedGroupId = project.publishedGroupId
-
-    libraryDescription = project.libraryDescription
-    siteUrl = project.siteUrl
-    gitUrl = project.gitUrl
-
-    libraryVersion = project.libraryVersion
-
-    deverloperId = project.developerId
-    developerName = project.developerName
-    developerEmail = project.developerEmail
-
-    licenseName = project.licenseName
-    licenseUrl = project.licenseUrl
-    allLicenses = project.allLicenses
-}
-
-apply from: '../installv1.gradle'
-apply from: 'bintrayv1.gradle'
