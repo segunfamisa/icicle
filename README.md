@@ -57,13 +57,7 @@ buildscript {
 
 ```groovy
 apply plugin: 'com.neenbedankt.android-apt'
-
-repositories {
-    maven {
-        url "https://dl.bintray.com/segunfamisa/maven/"
-    }
-}
-
+...
 dependencies {
     apt 'com.segunfamisa:icicle-processor:1.0.0'
     compile 'com.segunfamisa:icicle:1.0.0'
