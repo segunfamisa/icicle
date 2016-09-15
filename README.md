@@ -92,6 +92,18 @@ protected void onSaveInstanceState(Bundle outState) {
 
 Note: Icicle works only with non-private, non-final and non-static fields.
 
+## Proguard rules
+
+Please use the following proguard configuration for Icicle
+
+```
+-keep class **$$Icicle { *; }
+-keep class com.segunfamisa.icicle.** { *; }
+-keepclasseswithmembers class * {
+    @com.segunfamisa.icicle.annotations.Freeze <fields>;
+}
+```
+
 
 ## Contributing
 Contributions are welcome. Please check the [contributions guide](CONTRIBUTING.md) for more details.
